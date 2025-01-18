@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
 
@@ -316,24 +316,34 @@ Window {
             }
         }
 
-        ScrollView {
-            id: create_card_form
+        // ScrollView {
+        //     id: create_card_form
 
-            visible: false
-
-
-            anchors.centerIn: main
+        //     visible: false
 
 
-            height: parent.height - 200
-            width: 400
+        //     anchors.centerIn: main
+
+
+        //     height: parent.height - 200
+        //     width: 400
+
+
 
             ColumnLayout {
+                id: create_card_form
+
+                visible: false
+
+                // anchors.fill: parent
 
                 // anchors.horizontalCenter: parent.horizontalCenter
 
-                width: 400
-                height: parent.height + 150
+                // width: 400
+                // height: parent.height + 150
+
+                    height: parent.height - 200
+                    width: 400
 
                 // spacing: 25
                 Text {
@@ -406,7 +416,7 @@ Window {
                     }
                 }
             }
-        }
+        // }
 
         Default_Button {
             id: remove_card

@@ -20,7 +20,7 @@ ColumnLayout {
         font.family: theme.fontFamily
 
         Layout.preferredWidth: 250
-        Layout.preferredHeight: 28
+        Layout.preferredHeight: 40
     }
 
     TextField {
@@ -28,7 +28,7 @@ ColumnLayout {
 
         color: theme.addit_color
         font.pixelSize: theme.fontSizePara
-        placeholderText: label_helper
+        // placeholderText: label_helper
         placeholderTextColor: Qt.darker(theme.addit_color)
         font.family: theme.fontFamily
         Layout.preferredWidth: 250
@@ -50,7 +50,7 @@ ColumnLayout {
 
         background: Rectangle {
 
-            implicitHeight: 40
+            implicitHeight: 30
             implicitWidth: 250
             radius: 5
             color: textField.activeFocus ? theme.addit_second_color : theme.bg_color

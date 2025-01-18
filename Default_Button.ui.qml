@@ -18,6 +18,8 @@ Button {
     // font.weight: font.DemiBold
     id: custom_btn
 
+
+
     contentItem: Text {
         text: text_btn
         font.pixelSize: theme.fontSizeHeader3
@@ -26,6 +28,7 @@ Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
+        color:theme.addit_color
     }
 
     background: Rectangle {
@@ -35,5 +38,6 @@ Button {
         color: custom_btn.down ? Qt.lighter(
                                      theme.addit_second_color) : theme.addit_second_color
         radius: 5
+
     }
 }
