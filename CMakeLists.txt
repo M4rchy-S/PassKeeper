@@ -21,6 +21,7 @@ qt_add_qml_module(appPassKeeper
     QML_FILES
         Main.qml
         QML_FILES Default_Button.ui.qml InputElement.ui.qml
+        QML_FILES DescElement.ui.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

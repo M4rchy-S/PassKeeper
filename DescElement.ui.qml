@@ -24,7 +24,7 @@ ColumnLayout {
         Layout.preferredHeight: 40
     }
 
-    TextField {
+    TextArea {
         id: textField
 
         color: theme.addit_color
@@ -33,14 +33,17 @@ ColumnLayout {
         placeholderTextColor: Qt.darker(theme.addit_color)
         font.family: theme.fontFamily
         Layout.preferredWidth: 250
-        Layout.preferredHeight: 40
+        Layout.preferredHeight: 80
+
+        wrapMode: Text.Wrap
 
         selectionColor: Qt.lighter(theme.bg_color)
 
 
+
         background: Rectangle {
 
-            implicitHeight: 30
+            implicitHeight: 80
             implicitWidth: 250
             radius: 5
             color: textField.activeFocus ? theme.addit_second_color : theme.bg_color

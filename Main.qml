@@ -1,12 +1,13 @@
 import QtQuick
-import QtQuick.Controls 2.15
+// import QtQuick.Controls 2.15
 import QtQuick.Layouts
-
+import QtQuick.Controls.Basic
 
 Window {
     width: 480
     height: 800
     visible: true
+
     title: qsTr("Pass Keeper")
 
     Rectangle {
@@ -171,16 +172,50 @@ Window {
                         onEntered: parent.color = Qt.darker(theme.bg_color)
                         onExited: parent.color = theme.bg_color
                         onPressed: parent.color = Qt.darker(theme.bg_color)
-                        // onClicked: theme_popup.open()
+                        onClicked: theme_popup.open()
                     }
-                    // Popup {
-                    //     id: theme_popup
-                    //     width: 250
-                    //     height: 250
-                    //     modal: true
-                    //     focus: true
-                    //     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-                    // }
+                    Menu {
+                        id: theme_popup
+                        width: main.width -  100
+                        // height: main.height - 400
+                        anchors.centerIn: parent
+
+
+                        title: qsTr("Themes")
+
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        MenuItem{
+                            height: 75
+
+                            Text{
+                                // Layout.alignment: Qt.AlignHCenter
+                                anchors.centerIn: parent
+                                color: theme.bg_color
+                                text: qsTr("Dark")
+                                font.pixelSize: theme.fontSizePara
+
+                                font.weight: Font.DemiBold
+                                font.family: theme.fontFamily
+                            }
+
+                        }
+                        MenuItem{
+                            height: 75
+                            Text{
+                                // Layout.alignment: Qt.AlignHCenter
+                                anchors.centerIn: parent
+                                color: theme.bg_color
+                                text: qsTr("Light")
+                                font.pixelSize: theme.fontSizePara
+
+                                font.weight: Font.DemiBold
+                                font.family: theme.fontFamily
+                            }
+                        }
+                    }
                 }
                 Rectangle {
                     id: change_language_btn
@@ -232,16 +267,50 @@ Window {
                         onEntered: parent.color = Qt.darker(theme.bg_color)
                         onExited: parent.color = theme.bg_color
                         onPressed: parent.color = Qt.darker(theme.bg_color)
-                        // onClicked: language_popup.open()
+                        onClicked: language_popup.open()
                     }
-                    // Popup {
-                    //     id: language_popup
-                    //     width: 250
-                    //     height: 250
-                    //     modal: true
-                    //     focus: true
-                    //     closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-                    // }
+                    Menu {
+                        id: language_popup
+                        width: main.width -  100
+                        // height: main.height - 400
+                        anchors.centerIn: parent
+
+
+                        title: qsTr("Languages")
+
+                        modal: true
+                        focus: true
+                        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+                        MenuItem{
+                            height: 75
+
+                            Text{
+                                // Layout.alignment: Qt.AlignHCenter
+                                anchors.centerIn: parent
+                                color: theme.bg_color
+                                text: qsTr("English")
+                                font.pixelSize: theme.fontSizePara
+
+                                font.weight: Font.DemiBold
+                                font.family: theme.fontFamily
+                            }
+
+                        }
+                        MenuItem{
+                            height: 75
+                            Text{
+                                // Layout.alignment: Qt.AlignHCenter
+                                anchors.centerIn: parent
+                                color: theme.bg_color
+                                text: qsTr("Russian")
+                                font.pixelSize: theme.fontSizePara
+
+                                font.weight: Font.DemiBold
+                                font.family: theme.fontFamily
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -271,6 +340,8 @@ Window {
                     color: theme.bg_color
                     anchors.horizontalCenter: parent.horizontalCenter
                     radius: 5
+
+
 
                     RowLayout {
                         anchors.left: parent
@@ -316,24 +387,29 @@ Window {
             }
         }
 
-        // ScrollView {
-        //     id: create_card_form
+        ScrollView {
+            id: create_card_form
 
-        //     visible: false
+            // visible: false
+            // anchors.centerIn: main
+            // height: parent.height - 200
+            // width: 400
 
+            x: 0
+            y: 85
 
-        //     anchors.centerIn: main
-
-
-        //     height: parent.height - 200
-        //     width: 400
-
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: parent.height - 155
+            width: 400
+            visible: false
 
 
             ColumnLayout {
-                id: create_card_form
+                // id: create_card_form
 
-                visible: false
+                // visible: false
+
+                anchors.topMargin: 200
 
                 // anchors.fill: parent
 
@@ -345,18 +421,18 @@ Window {
                     height: parent.height - 200
                     width: 400
 
-                // spacing: 25
-                Text {
-                    id: _text
-                    color: theme.addit_color
-                    text: qsTr("Create Card")
-                    font.pixelSize: theme.fontSizeHeader
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.weight: Font.DemiBold
-                    font.family: theme.fontFamily
-                    Layout.alignment: Qt.AlignHCenter
-                }
+                spacing: 25
+                // Text {
+                //     id: _text
+                //     color: theme.addit_color
+                //     text: qsTr("Create Card")
+                //     font.pixelSize: theme.fontSizeHeader
+                //     horizontalAlignment: Text.AlignHCenter
+                //     verticalAlignment: Text.AlignVCenter
+                //     font.weight: Font.DemiBold
+                //     font.family: theme.fontFamily
+                //     Layout.alignment: Qt.AlignHCenter
+                // }
                 InputElement {
                     property string label_helper: qsTr("Title")
                 }
@@ -366,7 +442,7 @@ Window {
                 InputElement {
                     property string label_helper: qsTr("Email or Username")
                 }
-                InputElement {
+                DescElement {
                     property string label_helper: qsTr("Description")
                 }
                 RowLayout {
@@ -416,7 +492,7 @@ Window {
                     }
                 }
             }
-        // }
+        }
 
         Default_Button {
             id: remove_card
@@ -574,6 +650,15 @@ Window {
                     target: create_card_form
                     visible: true
                 }
+                PropertyChanges {
+                    target: _text1
+                    text: qsTr("Create card")
+                }
+                PropertyChanges {
+                    target: top_bar
+                    visible: true
+                }
+
             },
             State {
                 name: "EditCard"
@@ -605,6 +690,15 @@ Window {
                 PropertyChanges {
                     target: create_btn
                     text: "Edit"
+                }
+
+                PropertyChanges {
+                    target: _text1
+                    text: qsTr("Edit Card")
+                }
+                PropertyChanges {
+                    target: top_bar
+                    visible: true
                 }
             },
             State {
