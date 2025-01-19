@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="key">images/key_image.png</file>
-        <file alias="globe">images/globe.png</file>
-        <file alias="palette">images/palette.png</file>
-        <file>images/plus.png</file>
-        <file>images/bin.png</file>
-        <file>images/home.png</file>
-        <file>images/tune.png</file>
+        <file>images/palette_vec.svg</file>
+        <file>images/bin.svg</file>
+        <file>images/gear.svg</file>
+        <file>images/globe.svg</file>
+        <file>images/home.svg</file>
+        <file>images/key.svg</file>
+        <file>images/plus.svg</file>
     </qresource>
 </RCC>

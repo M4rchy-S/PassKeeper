@@ -2,7 +2,7 @@ import QtQuick
 // import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import QtQuick.Controls.Basic
-
+import QtQuick.VectorImage
 
 Window {
     width: 480
@@ -46,7 +46,7 @@ Window {
             visible: true
 
             anchors.top: parent.top
-            anchors.topMargin: 220
+            anchors.topMargin: 150
 
             spacing: 40
 
@@ -135,12 +135,14 @@ Window {
                         Item {}
 
 
-                        Image{
-                            source: "qrc:/icons/palette"
-                            sourceSize.width: 40
-                            sourceSize.height: 40
-                            fillMode: Image.Stretch
+
+                        VectorImage{
+                            source: "qrc:/icons/images/palette_vec.svg"
+                            // sourceSize.width: 40
+                            // sourceSize.height: 40
+                            fillMode: VectorImage.Stretch
                         }
+
                         // Text {
                         //     Layout.alignment: Qt.AlignVCenter
                         //     color: theme.addit_color
@@ -236,11 +238,11 @@ Window {
                         spacing: 25
                         Item {}
 
-                        Image{
-                            source: "qrc:/icons/globe"
-                            sourceSize.width: 40
-                            sourceSize.height: 40
-                            fillMode: Image.Stretch
+                        VectorImage{
+                            source: "qrc:/icons/images/globe.svg"
+                            // sourceSize.width: 40
+                            // sourceSize.height: 40
+                            fillMode: VectorImage.Stretch
                         }
                         // Text {
                         //     Layout.alignment: Qt.AlignVCenter
@@ -365,11 +367,11 @@ Window {
 
                         Item {}
 
-                        Image{
-                            source: "qrc:/icons/key"
-                            sourceSize.width: 40
-                            sourceSize.height: 40
-                            fillMode: Image.Stretch
+                        VectorImage{
+                            source: "qrc:/icons/images/key.svg"
+                            // sourceSize.width: 40
+                            // sourceSize.height: 40
+                            fillMode: VectorImage.Stretch
                         }
 
                         Text {
@@ -519,11 +521,11 @@ Window {
 
             visible: false
 
-            contentItem: Image{
-                height: 50
-                width: 50
-                fillMode: Image.Stretch
-                source : "qrc:/icons/images/bin.png"
+            contentItem: VectorImage{
+                // height: 50
+                // width: 50
+                fillMode: VectorImage.Stretch
+                source : "qrc:/icons/images/bin.svg"
             }
 
             background: Rectangle {
@@ -548,11 +550,11 @@ Window {
 
             visible: false
 
-            contentItem: Image{
-                height: 50
-                width: 50
-                fillMode: Image.Stretch
-                source : "qrc:/icons/images/plus.png"
+            contentItem: VectorImage{
+                // height: 50
+                // width: 50
+                fillMode: VectorImage.Stretch
+                source : "qrc:/icons/images/plus.svg"
             }
 
             background: Rectangle {
@@ -598,13 +600,13 @@ Window {
 
                         spacing: 0
 
-                        Image{
+                        VectorImage{
                             id: home_btn_image
                             Layout.alignment: Qt.AlignHCenter
-                            source: "qrc:/icons/images/home.png"
-                            sourceSize.height: 35
-                            sourceSize.width: 35
-                            fillMode: Image.Stretch
+                            source: "qrc:/icons/images/home.svg"
+                            // sourceSize.height: 35
+                            // sourceSize.width: 35
+                            fillMode: VectorImage.Stretch
                         }
 
                         Text {
@@ -658,6 +660,7 @@ Window {
                     id: settings_btn
                     width: 60
                     height: 60
+
                     color: theme.addit_second_color
 
                     ColumnLayout{
@@ -665,13 +668,16 @@ Window {
 
                         spacing: 0
 
-                        Image{
+
+
+                        VectorImage{
                             id: settings_btn_image
                             Layout.alignment: Qt.AlignHCenter
-                            source: "qrc:/icons/images/tune.png"
-                            sourceSize.height: 35
-                            sourceSize.width: 35
-                            fillMode: Image.Stretch
+                            source: "qrc:/icons/images/gear.svg"
+                            // sourceSize.height: 35
+                            // sourceSize.width: 35
+
+                            fillMode: VectorImage.Stretch
                         }
 
                         Text {
