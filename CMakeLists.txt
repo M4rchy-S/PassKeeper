@@ -3,8 +3,11 @@ cmake_minimum_required(VERSION 3.16)
 project(PassKeeper VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTORCC ON)
+
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
+
 
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -13,6 +16,7 @@ qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(appPassKeeper
     main.cpp
+    icons.qrc
 )
 
 qt_add_qml_module(appPassKeeper
@@ -22,6 +26,7 @@ qt_add_qml_module(appPassKeeper
         Main.qml
         QML_FILES Default_Button.ui.qml InputElement.ui.qml
         QML_FILES DescElement.ui.qml
+        RESOURCES icons.qrc
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

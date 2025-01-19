@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="key">images/key_image.png</file>
+        <file alias="globe">images/globe.png</file>
+        <file alias="palette">images/palette.png</file>
+        <file>images/plus.png</file>
+        <file>images/bin.png</file>
+    </qresource>
+</RCC>

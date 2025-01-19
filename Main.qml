@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls.Basic
 
+
 Window {
     width: 480
     height: 800
@@ -133,15 +134,22 @@ Window {
                         spacing: 25
                         Item {}
 
-                        Text {
-                            Layout.alignment: Qt.AlignVCenter
-                            color: theme.addit_color
-                            text: qsTr("P")
-                            font.pixelSize: theme.fontSizeHeader
 
-                            font.weight: Font.DemiBold
-                            font.family: theme.fontFamily
+                        Image{
+                            source: "qrc:/icons/palette"
+                            sourceSize.width: 40
+                            sourceSize.height: 40
+                            fillMode: Image.Stretch
                         }
+                        // Text {
+                        //     Layout.alignment: Qt.AlignVCenter
+                        //     color: theme.addit_color
+                        //     text: qsTr("P")
+                        //     font.pixelSize: theme.fontSizeHeader
+
+                        //     font.weight: Font.DemiBold
+                        //     font.family: theme.fontFamily
+                        // }
 
                         ColumnLayout {
 
@@ -228,15 +236,21 @@ Window {
                         spacing: 25
                         Item {}
 
-                        Text {
-                            Layout.alignment: Qt.AlignVCenter
-                            color: theme.addit_color
-                            text: qsTr("P")
-                            font.pixelSize: theme.fontSizeHeader
-
-                            font.weight: Font.DemiBold
-                            font.family: theme.fontFamily
+                        Image{
+                            source: "qrc:/icons/globe"
+                            sourceSize.width: 40
+                            sourceSize.height: 40
+                            fillMode: Image.Stretch
                         }
+                        // Text {
+                        //     Layout.alignment: Qt.AlignVCenter
+                        //     color: theme.addit_color
+                        //     text: qsTr("P")
+                        //     font.pixelSize: theme.fontSizeHeader
+
+                        //     font.weight: Font.DemiBold
+                        //     font.family: theme.fontFamily
+                        // }
 
                         ColumnLayout {
 
@@ -347,22 +361,17 @@ Window {
                         anchors.left: parent
                         anchors.verticalCenter: parent.verticalCenter
 
-                        // anchors.leftMargin: 150
                         spacing: 20
 
                         Item {}
 
-                        Text {
-
-                            color: theme.addit_color
-                            text: qsTr("P")
-                            font.pixelSize: 35
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            font.weight: Font.DemiBold
-                            font.family: theme.fontFamily
-                            Layout.alignment: Qt.AlignHCenter
+                        Image{
+                            source: "qrc:/icons/key"
+                            sourceSize.width: 40
+                            sourceSize.height: 40
+                            fillMode: Image.Stretch
                         }
+
                         Text {
 
                             color: theme.addit_color
@@ -411,15 +420,8 @@ Window {
 
                 anchors.topMargin: 200
 
-                // anchors.fill: parent
-
-                // anchors.horizontalCenter: parent.horizontalCenter
-
-                // width: 400
-                // height: parent.height + 150
-
-                    height: parent.height - 200
-                    width: 400
+                height: parent.height - 200
+                width: 400
 
                 spacing: 25
                 // Text {
@@ -494,33 +496,77 @@ Window {
             }
         }
 
-        Default_Button {
+        // Default_Button {
+        //     id: remove_card
+        //     x: 50
+        //     y: main.height - 125
+
+        //     width: 50
+        //     height: 50
+
+        //     visible: false
+        //     property string text_btn: qsTr("R")
+        // }
+
+        Button {
             id: remove_card
+
+            width: 50
+            height: 50
+
             x: 50
             y: main.height - 125
 
+            visible: false
+
+            contentItem: Image{
+                height: 50
+                width: 50
+                fillMode: Image.Stretch
+                source : "qrc:/icons/images/bin.png"
+            }
+
+            background: Rectangle {
+                implicitWidth: custom_btn.width
+                implicitHeight: custom_btn.height
+                // color: custom_btn.down ? "#60B57C" : theme.addit_second_color
+                color: remove_card.down ? Qt.lighter(
+                                             theme.addit_second_color) : theme.addit_second_color
+                radius: 5
+            }
+        }
+
+
+        Button {
+            id: add_card_btn_plus
+
             width: 50
             height: 50
 
-            visible: false
-            property string text_btn: qsTr("R")
-        }
-
-        Default_Button {
-            id: add_new_card_btn
             x: main.width - 100
             y: main.height - 150
 
-            width: 50
-            height: 50
-
             visible: false
-            property string text_btn: qsTr("+")
 
-            Connections {
-                target: add_new_card_btn
-                onClicked: main.state = "CreateCard"
+            contentItem: Image{
+                height: 50
+                width: 50
+                fillMode: Image.Stretch
+                source : "qrc:/icons/images/plus.png"
             }
+
+            background: Rectangle {
+                implicitWidth: custom_btn.width
+                implicitHeight: custom_btn.height
+                // color: custom_btn.down ? "#60B57C" : theme.addit_second_color
+                color: add_card_btn_plus.down ? Qt.lighter(
+                                             theme.addit_second_color) : theme.addit_second_color
+                radius: 5
+            }
+                Connections {
+                    target: add_card_btn_plus
+                    onClicked: main.state = "CreateCard"
+                }
         }
 
         Rectangle {
@@ -632,6 +678,12 @@ Window {
                     visible: true
                     snapMode: ListView.SnapToItem
                     z: 0
+                }
+
+                PropertyChanges {
+                    target: add_card_btn_plus
+                    visible: true
+
                 }
             },
             State {

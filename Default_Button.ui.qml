@@ -2,23 +2,12 @@ import QtQuick
 import QtQuick.Controls
 
 Button {
-
-    // Layout.preferredWidth: 250
-    // Layout.preferredHeight: 40
-    // Layout.alignment: Qt.AlignHCenter
-
     // property string text_btn: qsTr("Enter")
     width: 250
     height: 40
 
-    // color: theme.addit_color
-    // text: text_btn
-    // font.pixelSize: theme.fontSizeHeader3
-    // font.family: theme.fontFamily
-    // font.weight: font.DemiBold
+
     id: custom_btn
-
-
 
     contentItem: Text {
         text: text_btn
