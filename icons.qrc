@@ -5,5 +5,7 @@
         <file alias="palette">images/palette.png</file>
         <file>images/plus.png</file>
         <file>images/bin.png</file>
+        <file>images/home.png</file>
+        <file>images/tune.png</file>
     </qresource>
 </RCC>

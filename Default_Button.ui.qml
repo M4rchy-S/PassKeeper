@@ -23,9 +23,9 @@ Button {
     background: Rectangle {
         implicitWidth: custom_btn.width
         implicitHeight: custom_btn.height
-        // color: custom_btn.down ? "#60B57C" : theme.addit_second_color
-        color: custom_btn.down ? Qt.lighter(
-                                     theme.addit_second_color) : theme.addit_second_color
+        color: custom_btn.down ? "#60B57C" : theme.addit_second_color
+        // color: custom_btn.down ? Qt.lighter(
+        //                              theme.addit_second_color) : theme.addit_second_color
         radius: 5
 
     }

@@ -529,9 +529,9 @@ Window {
             background: Rectangle {
                 implicitWidth: custom_btn.width
                 implicitHeight: custom_btn.height
-                // color: custom_btn.down ? "#60B57C" : theme.addit_second_color
-                color: remove_card.down ? Qt.lighter(
-                                             theme.addit_second_color) : theme.addit_second_color
+                color: remove_card.down ? "#B56060" : theme.addit_second_color
+                // color: remove_card.down ? Qt.lighter(
+                                             // theme.addit_second_color) : theme.addit_second_color
                 radius: 5
             }
         }
@@ -558,9 +558,9 @@ Window {
             background: Rectangle {
                 implicitWidth: custom_btn.width
                 implicitHeight: custom_btn.height
-                // color: custom_btn.down ? "#60B57C" : theme.addit_second_color
-                color: add_card_btn_plus.down ? Qt.lighter(
-                                             theme.addit_second_color) : theme.addit_second_color
+                color: add_card_btn_plus.down ? "#60B57C" : theme.addit_second_color
+                // color: add_card_btn_plus.down ? Qt.lighter(
+                                             // theme.addit_second_color) : theme.addit_second_color
                 radius: 5
             }
                 Connections {
@@ -589,50 +589,110 @@ Window {
 
                 Rectangle {
                     id: home_btn
-                    width: 50
-                    height: 50
-                    color: "black"
+                    width: 60
+                    height: 60
+                    color: theme.addit_second_color
 
-                    Text {
+                    ColumnLayout{
+                        anchors.fill : parent
 
-                        color: theme.addit_color
-                        text: qsTr("Main")
-                        font.pixelSize: theme.fontSizeHeader
+                        spacing: 0
 
-                        font.weight: Font.DemiBold
-                        font.family: theme.fontFamily
-                        anchors.centerIn: parent
+                        Image{
+                            id: home_btn_image
+                            Layout.alignment: Qt.AlignHCenter
+                            source: "qrc:/icons/images/home.png"
+                            sourceSize.height: 35
+                            sourceSize.width: 35
+                            fillMode: Image.Stretch
+                        }
+
+                        Text {
+                            id: home_btn_text
+                            color: theme.addit_color
+                            text: qsTr("Home")
+                            font.pixelSize: 15
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.weight: Font.Medium
+                            font.family: theme.fontFamily
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+
                     }
+
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: home_btn.color = "red"
-                        onExited: home_btn.color = "black"
+                        onEntered: {home_btn_image.opacity = 0.5 ; home_btn_text.opacity = 0.5}
+                        onExited: {home_btn_image.opacity = 1 ; home_btn_text.opacity = 1}
                         onClicked: main.state = "CardsPage"
                     }
                 }
+                // Rectangle {
+
+                //     id: settings_btn
+                //     width: 50
+                //     height: 50
+                //     color: "black"
+
+                //     Text {
+
+                //         color: theme.addit_color
+                //         text: qsTr("Settings")
+                //         font.pixelSize: theme.fontSizeHeader
+
+                //         font.weight: Font.DemiBold
+                //         font.family: theme.fontFamily
+                //         anchors.centerIn: parent
+                //     }
+                //     MouseArea {
+                //         anchors.fill: parent
+                //         hoverEnabled: true
+                //         onEntered: settings_btn.color = "red"
+                //         onExited: settings_btn.color = "black"
+                //         onClicked: main.state = "Settings"
+                //     }
+                // }
                 Rectangle {
-
                     id: settings_btn
-                    width: 50
-                    height: 50
-                    color: "black"
+                    width: 60
+                    height: 60
+                    color: theme.addit_second_color
 
-                    Text {
+                    ColumnLayout{
+                        anchors.fill : parent
 
-                        color: theme.addit_color
-                        text: qsTr("Settings")
-                        font.pixelSize: theme.fontSizeHeader
+                        spacing: 0
 
-                        font.weight: Font.DemiBold
-                        font.family: theme.fontFamily
-                        anchors.centerIn: parent
+                        Image{
+                            id: settings_btn_image
+                            Layout.alignment: Qt.AlignHCenter
+                            source: "qrc:/icons/images/tune.png"
+                            sourceSize.height: 35
+                            sourceSize.width: 35
+                            fillMode: Image.Stretch
+                        }
+
+                        Text {
+                            id: settings_btn_text
+                            color: theme.addit_color
+                            text: qsTr("Settings")
+                            font.pixelSize: 15
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.weight: Font.Medium
+                            font.family: theme.fontFamily
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+
                     }
+
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: settings_btn.color = "red"
-                        onExited: settings_btn.color = "black"
+                        onEntered: {settings_btn_image.opacity = 0.5 ; settings_btn_text.opacity = 0.5}
+                        onExited: {settings_btn_image.opacity = 1 ; settings_btn_text.opacity = 1}
                         onClicked: main.state = "Settings"
                     }
                 }
