@@ -186,8 +186,13 @@ bool PassSafer::DecryptAES(const unsigned char* ciphertext, int ciphertext_len, 
 
 
 
-int PassSafer::CreateCard(const std::string &Title, const std::string &Password, const std::string &URL, const std::string &Email, const std::string &UserName, const std::string &Description)
+int PassSafer::CreateCard(const QString &TitleQ, const QString &PasswordQ, const QString &EmailQ ,  const QString &DescriptionQ )
 {
+    std::string Title = TitleQ.toStdString();
+    std::string Password = PasswordQ.toStdString();
+    std::string Email = EmailQ.toStdString();
+    std::string Description = DescriptionQ.toStdString();
+
 	if (this->data.size() >= this->MAX_CARDS_COUNT)
 		return -1;
 
@@ -197,13 +202,7 @@ int PassSafer::CreateCard(const std::string &Title, const std::string &Password,
 	if (Password.length() == 0 || Password.length() >= this->PASSWORD_SIZE)
 		return -1;
 
-	if (URL.length() >= this->URL_SIZE)
-		return -1;
-
 	if(Email.length() >= this->EMAIL_SIZE)
-		return -1;
-
-	if (UserName.length() >= this->USERNAME_SIZE)
 		return -1;
 
 	if (Description.length() >= this->DESCRIPTION_SIZE)
@@ -212,10 +211,8 @@ int PassSafer::CreateCard(const std::string &Title, const std::string &Password,
 	nlohmann::json card;
 
 	card["title"] = Title;
-	card["url"] = URL;
+    card["password"] = Password;
 	card["email"] = Email;
-	card["username"] = UserName;
-	card["password"] = Password;
 	card["description"] = Description;
 
 	this->data.push_back(card);
@@ -223,8 +220,14 @@ int PassSafer::CreateCard(const std::string &Title, const std::string &Password,
 	return 1;
 }
 
-int PassSafer::EditCard(unsigned int index, const std::string &Title, const std::string &Password, const std::string &URL, const std::string &Email, const std::string &UserName, const std::string &Description)
+int PassSafer::EditCard(const QString &indexQ, const QString &TitleQ, const QString &PasswordQ, const QString &EmailQ,  const QString &DescriptionQ)
 {
+    int index = indexQ.toInt();
+    std::string Title = TitleQ.toStdString();
+    std::string Password = PasswordQ.toStdString();
+    std::string Email = EmailQ.toStdString();
+    std::string Description = DescriptionQ.toStdString();
+
 	if (index < 0 || index > this->data.size())
 		return -1;
 
@@ -234,30 +237,23 @@ int PassSafer::EditCard(unsigned int index, const std::string &Title, const std:
 	if (Password.length() == 0 || Password.length() >= this->PASSWORD_SIZE)
 		return -1;
 
-	if (URL.length() >= this->URL_SIZE)
-		return -1;
-
 	if (Email.length() >= this->EMAIL_SIZE)
-		return -1;
-
-	if (UserName.length() >= this->USERNAME_SIZE)
 		return -1;
 
 	if (Description.length() >= this->DESCRIPTION_SIZE)
 		return -1;
 
 	this->data[index]["title"] = Title;
-	this->data[index]["url"] = URL;
+    this->data[index]["password"] = Password;
 	this->data[index]["email"] = Email;
-	this->data[index]["username"] = UserName;
-	this->data[index]["password"] = Password;
 	this->data[index]["description"] = Description;
 
 	return 1;
 }
 
-int PassSafer::DeleteCard(unsigned int index)
+int PassSafer::DeleteCard(const QString &indexQ)
 {
+    int index = indexQ.toInt();
 	if (index < 0 || index > this->data.size())
 		return -1;
 
@@ -288,12 +284,19 @@ bool PassSafer::DeleteAllCards()
 	}
 }
 
-nlohmann::json PassSafer::GetCardInfo(unsigned int index)
+QStringList PassSafer::GetCardInfo(unsigned int index)
 {
+    QStringList lst;
 	if (index < 0 || index > this->data.size())
-		return nlohmann::json();
+        return QStringList("");
 
-	return this->data[index];
+    lst << QString::number(index);
+    lst <<  QString::fromStdString( this->data[index]["title"] );
+    lst <<  QString::fromStdString( this->data[index]["password"] );
+    lst <<  QString::fromStdString( this->data[index]["email"] );
+    lst <<  QString::fromStdString( this->data[index]["description"] );
+
+    return lst;
 }
 
 unsigned short PassSafer::getCardCount()

@@ -19,7 +19,37 @@ Window {
         id: safer
     }
 
+    function updateDataCards()
+    {
+        cards_list_model.clear();
+        for(var i = 0; i < safer.getCardCount(); i++)
+        {
+            var card = safer.GetCardInfo(i);
+            cards_list_model.append({title: card[1], index: card[0]})
+        }
+    }
 
+    function cleanInputs()
+    {
+        title_input.children[1].text = "" ;
+        password_input.children[1].text = "" ;
+        email_input.children[1].text = "" ;
+        desc_input.children[1].text = "" ;
+
+        console.log("inputs cleared");
+    }
+
+    function fillInputs(index)
+    {
+        var card = safer.GetCardInfo(index);
+
+        title_input.children[1].text = card[1] ;
+        password_input.children[1].text = card[2] ;
+        email_input.children[1].text = card[3] ;
+        desc_input.children[1].text = card[4] ;
+
+        console.log("inputs filled");
+    }
 
 
     Rectangle {
@@ -31,6 +61,9 @@ Window {
 
         Item {
             id: theme
+
+            property int index: 0
+            property bool editMode: false
 
             property color bg_color: "#373F47"
             property color bg_accent: "#7E99A3"
@@ -97,18 +130,19 @@ Window {
                         let childTextField = inputElementStart.children[1];
                         if(safer.isFileGood())
                         {
-                            //if(safer.IsPasswordStrong(childTextField.text))
-                                if( safer.EnterMasterPassword(childTextField.text) == true )
-                                {
-                                    console.log("Entered master password");
-                                    main.state = "CardsPage"
-                                }
+                            if( safer.EnterMasterPassword(childTextField.text) == true )
+                            {
+                                console.log("Entered master password");
+                                updateDataCards();
+                                main.state = "CardsPage"
+                            }
                         }
                         else{
-                            //if(safer.IsPasswordStrong(childTextField.text))
+                            if(safer.IsPasswordStrong(childTextField.text))
                                 if( safer.CreateMasterPassword(childTextField.text) == true)
                                 {
                                     console.log("Created master password");
+                                    updateDataCards();
                                     main.state = "CardsPage"
                                 }
                         }
@@ -368,6 +402,8 @@ Window {
             }
         }
 
+
+
         ScrollView {
             id: cardscrollview
             x: 0
@@ -385,7 +421,11 @@ Window {
                 id: listView
                 visible: false
 
-                model: 25
+                model: ListModel{
+                    id: cards_list_model
+                    ListElement { title: "test1"; index: "1" }
+                    ListElement { title: "test2"; index: "2" }
+                }
 
                 spacing: 15
 
@@ -398,7 +438,6 @@ Window {
                     color: theme.bg_color
                     anchors.horizontalCenter: parent.horizontalCenter
                     radius: 5
-
 
 
                     RowLayout {
@@ -419,7 +458,7 @@ Window {
                         Text {
 
                             color: theme.addit_color
-                            text: qsTr("PassKeeper")
+                            text: model.title
                             font.pixelSize: theme.fontSizeHeader3
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
@@ -434,7 +473,13 @@ Window {
                         onEntered: parent.color = Qt.darker(theme.bg_color)
                         onExited: parent.color = theme.bg_color
                         onPressed: parent.color = Qt.darker(theme.bg_color)
-                        onClicked: main.state = "EditCard"
+                        onClicked: {
+                            theme.editMode = true
+                            theme.index = index
+                            console.log("Switched theme index to " + theme.index)
+                            fillInputs(index);
+                            main.state = "EditCard";
+                        }
                     }
                 }
             }
@@ -481,15 +526,19 @@ Window {
                 // }
                 InputElement {
                     property string label_helper: qsTr("Title")
+                    id: title_input
                 }
                 InputElement {
                     property string label_helper: qsTr("Password")
+                    id: password_input
                 }
                 InputElement {
                     property string label_helper: qsTr("Email or Username")
+                    id: email_input
                 }
                 DescElement {
                     property string label_helper: qsTr("Description")
+                    id: desc_input
                 }
                 RowLayout {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -500,19 +549,15 @@ Window {
                         Layout.preferredWidth: 135
                         Layout.preferredHeight: 45
                         Layout.alignment: Qt.AlignHCenter
-                        property string text_btn: qsTr("Cancel")
-                        // Text {
+                        property string text_btn:  qsTr("Cancel")
 
-                        //     color: theme.addit_color
-                        //     text: "Cancel"
-                        //     font.pixelSize: theme.fontSizeHeader3
-                        //     font.family: theme.fontFamily
-                        //     anchors.centerIn: parent
-                        //     font.weight: font.DemiBold
-                        // }
                         Connections {
                             target: cancel_btn
-                            onClicked: main.state = "CardsPage"
+                            onClicked: {
+                                updateDataCards();
+                                main.state = "CardsPage"
+                            }
+
                         }
                     }
                     Default_Button {
@@ -520,20 +565,32 @@ Window {
                         Layout.preferredWidth: 135
                         Layout.preferredHeight: 45
                         Layout.alignment: Qt.AlignHCenter
-                        property string text_btn: qsTr("Create")
+                        property string text_btn: theme.editMode ? qsTr("Apply") : qsTr("Create");
 
-                        // Text {
-
-                        //     color: theme.addit_color
-                        //     text: "Create"
-                        //     font.pixelSize: theme.fontSizeHeader3
-                        //     font.family: theme.fontFamily
-                        //     anchors.centerIn: parent
-                        //     font.weight: font.DemiBold
-                        // }
                         Connections {
                             target: create_btn
-                            onClicked: main.state = "CardsPage"
+                            onClicked:{
+                                if(theme.editMode)
+                                {
+                                    console.log("Edit mode apply");
+                                    if ( safer.EditCard(theme.index, title_input.children[1].text, password_input.children[1].text, email_input.children[1].text, desc_input.children[1].text ) == 1 )
+                                    {
+                                        updateDataCards();
+                                        main.state = "CardsPage"
+                                    }
+                                }
+                                else
+                                {
+                                    console.log("Create card");
+                                    if( safer.CreateCard(title_input.children[1].text, password_input.children[1].text, email_input.children[1].text, desc_input.children[1].text ) == 1 )
+                                    {
+                                        updateDataCards();
+                                        main.state = "CardsPage"
+                                    }
+                                }
+
+
+                            }
                         }
                     }
                 }
@@ -578,6 +635,18 @@ Window {
                                              // theme.addit_second_color) : theme.addit_second_color
                 radius: 5
             }
+
+            MouseArea{
+                anchors.fill : parent
+                onClicked: {
+                    //console.log("Bin pressed with ID " + theme.index);
+                    if( safer.DeleteCard(theme.index) == 1 )
+                    {
+                        updateDataCards();
+                        main.state = "CardsPage"
+                    }
+                }
+            }
         }
 
 
@@ -609,7 +678,11 @@ Window {
             }
                 Connections {
                     target: add_card_btn_plus
-                    onClicked: main.state = "CreateCard"
+                    onClicked: {
+                        theme.editMode = false;
+                        cleanInputs() ;
+                        main.state = "CreateCard";
+                    }
                 }
         }
 

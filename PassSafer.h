@@ -16,6 +16,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 
 class PassSafer : public QObject
 {
@@ -56,12 +57,12 @@ public:
 
 
 	//		Card func
-    Q_INVOKABLE int CreateCard(const std::string &Title, const std::string &Password, const std::string &URL = "", const std::string &Email = "", const std::string &UserName = "", const std::string &Description = "");
-    Q_INVOKABLE int EditCard(unsigned int index, const std::string &Title, const std::string &Password, const std::string &URL = "", const std::string &Email = "", const std::string &UserName = "", const std::string &Description = "");
-    Q_INVOKABLE int DeleteCard(unsigned int index);
+    Q_INVOKABLE int CreateCard(const QString &TitleQ, const QString &PasswordQ, const QString &EmailQ = "",  const QString &DescriptionQ = "");
+    Q_INVOKABLE int EditCard(const QString &indexQ, const QString &TitleQ, const QString &PasswordQ, const QString &EmailQ = "",  const QString &DescriptionQ = "");
+    Q_INVOKABLE int DeleteCard(const QString &index);
     Q_INVOKABLE bool DeleteAllCards();
 
-	nlohmann::json GetCardInfo(unsigned int index);
+    Q_INVOKABLE QStringList GetCardInfo(unsigned int index);
 
 	//		Utility func
     Q_INVOKABLE unsigned short getCardCount();
