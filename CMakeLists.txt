@@ -7,7 +7,8 @@ set(CMAKE_AUTORCC ON)
 
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
-
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -27,6 +28,7 @@ qt_add_qml_module(appPassKeeper
         QML_FILES Default_Button.ui.qml InputElement.ui.qml
         QML_FILES DescElement.ui.qml
         RESOURCES icons.qrc
+        SOURCES PassSafer.cpp PassSafer.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -43,7 +45,9 @@ set_target_properties(appPassKeeper PROPERTIES
 target_link_libraries(appPassKeeper
     PRIVATE Qt6::Quick
 )
-
+target_link_libraries(appPassKeeper PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(appPassKeeper PRIVATE OpenSSL::SSL)
+target_link_libraries(appPassKeeper PRIVATE OpenSSL::Crypto)
 
 include(GNUInstallDirs)
 install(TARGETS appPassKeeper

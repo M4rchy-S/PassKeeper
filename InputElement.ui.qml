@@ -26,6 +26,7 @@ ColumnLayout {
 
     TextField {
         id: textField
+        objectName: "childField"
 
         color: theme.addit_color
         font.pixelSize: theme.fontSizePara

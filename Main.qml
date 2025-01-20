@@ -1,8 +1,12 @@
 import QtQuick
-// import QtQuick.Controls 2.15
 import QtQuick.Layouts
-import QtQuick.Controls.Basic
 import QtQuick.VectorImage
+
+import QtQuick.Controls.Basic
+// import QtQuick.Controls 2.15
+// import QtQuick.Controls.Material 2.12
+
+import com.ics.keeper 1.0
 
 Window {
     width: 480
@@ -10,6 +14,13 @@ Window {
     visible: true
 
     title: qsTr("Pass Keeper")
+
+    PassSafer{
+        id: safer
+    }
+
+
+
 
     Rectangle {
         id: main
@@ -64,9 +75,13 @@ Window {
             }
 
             InputElement {
-                property string label_helper: qsTr("Your password")
+
+                property string label_helper: safer.isFileGood() ? qsTr("Your password") : qsTr("Create your password")
+
                 id: inputElementStart
             }
+
+
 
             Default_Button {
                 // id: enter_button
@@ -78,7 +93,29 @@ Window {
 
                 Connections {
                     target: enter_button
-                    onClicked: main.state = "CardsPage"
+                    onClicked: {
+                        let childTextField = inputElementStart.children[1];
+                        if(safer.isFileGood())
+                        {
+                            //if(safer.IsPasswordStrong(childTextField.text))
+                                if( safer.EnterMasterPassword(childTextField.text) == true )
+                                {
+                                    console.log("Entered master password");
+                                    main.state = "CardsPage"
+                                }
+                        }
+                        else{
+                            //if(safer.IsPasswordStrong(childTextField.text))
+                                if( safer.CreateMasterPassword(childTextField.text) == true)
+                                {
+                                    console.log("Created master password");
+                                    main.state = "CardsPage"
+                                }
+                        }
+
+                        //main.state = "CardsPage"
+                    }
+
                 }
             }
         }
@@ -341,13 +378,18 @@ Window {
             width: 400
             visible: false
 
+
+
             ListView {
+
                 id: listView
                 visible: false
 
-                model: 4
+                model: 25
 
                 spacing: 15
+
+                snapMode: PathView.SnapToItem
 
                 delegate: Rectangle {
 
