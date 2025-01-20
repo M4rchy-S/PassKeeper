@@ -628,16 +628,18 @@ Window {
             }
 
             background: Rectangle {
+                id: background_btn_bin
                 implicitWidth: custom_btn.width
                 implicitHeight: custom_btn.height
                 color: remove_card.down ? "#B56060" : theme.addit_second_color
-                // color: remove_card.down ? Qt.lighter(
-                                             // theme.addit_second_color) : theme.addit_second_color
                 radius: 5
             }
 
             MouseArea{
                 anchors.fill : parent
+                hoverEnabled: true
+                onEntered: background_btn_bin.color =  "#B56060";
+                onExited: background_btn_bin.color = theme.addit_second_color;
                 onClicked: {
                     //console.log("Bin pressed with ID " + theme.index);
                     if( safer.DeleteCard(theme.index) == 1 )
@@ -669,21 +671,23 @@ Window {
             }
 
             background: Rectangle {
+                id: background_btn_plus
                 implicitWidth: custom_btn.width
                 implicitHeight: custom_btn.height
                 color: add_card_btn_plus.down ? "#60B57C" : theme.addit_second_color
-                // color: add_card_btn_plus.down ? Qt.lighter(
-                                             // theme.addit_second_color) : theme.addit_second_color
                 radius: 5
             }
-                Connections {
-                    target: add_card_btn_plus
-                    onClicked: {
-                        theme.editMode = false;
-                        cleanInputs() ;
-                        main.state = "CreateCard";
-                    }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: background_btn_plus.color =  "#60B57C";
+                onExited: background_btn_plus.color = theme.addit_second_color;
+                onClicked: {
+                    theme.editMode = false;
+                    cleanInputs() ;
+                    main.state = "CreateCard";
                 }
+            }
         }
 
         Rectangle {

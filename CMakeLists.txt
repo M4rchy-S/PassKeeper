@@ -5,6 +5,10 @@ project(PassKeeper VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
+set(nlohmann_json_DIR "C:\\Programs\\vcpkg\\packages\\nlohmann-json_x64-windows\\share\\nlohmann_json")
+set(OpenSSL_DIR "C:\\Programs\\vcpkg\\packages\\openssl_x64-windows\\share\\openssl")
+
+
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 find_package(nlohmann_json CONFIG REQUIRED)
