@@ -3,8 +3,13 @@
 
 #include <nlohmann/json.hpp>
 
-#include <openssl/evp.h>
-#include <openssl/rand.h>
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/sha.h>
+#include <cryptopp/pwdbased.h>
 
 #include <fstream>
 #include <filesystem>
@@ -18,6 +23,8 @@
 #include <QString>
 #include <QStringList>
 
+using namespace CryptoPP;
+
 class PassSafer : public QObject
 {
     Q_OBJECT
@@ -29,7 +36,7 @@ private:
 	bool isFileExist = false;
 	bool isSavingToFile = false;
 
-	const unsigned char iv[35] = "VynsKJ9VddfOAz0Xu8lSHhbvnkExzpY3";
+
 	std::string key;
 
 	const unsigned int SIZE_DATA_STR = 100000;
@@ -45,11 +52,14 @@ private:
 
 	//		File func
 	int readDataFromFile(const char* filename);
-	int writeDataToFile(const char* filename);
+    int writeDataToFile(const char* filename="data.json");
 
 	//		AES Encryption functions
-	bool EncryptAES(const unsigned char *plaintext, int plaintext_lin, unsigned char *ciphertext, int &ciphertext_len);
-	bool DecryptAES(const unsigned char *ciphertext, int ciphertext_len, unsigned char *plaintext, int &plaintext_len);
+    // bool EncryptAES(const unsigned char *plaintext, int plaintext_lin, unsigned char *ciphertext, int &ciphertext_len);
+    // bool DecryptAES(const unsigned char *ciphertext, int ciphertext_len, unsigned char *plaintext, int &plaintext_len);
+
+    bool EncryptAES(const char * plaintext, size_t len, std::string &ciphertext);
+    bool DecryptAES(const char * ciphertext, size_t len ,std::string& plaintext);
 
 public:
     explicit PassSafer(QObject *parent = nullptr);

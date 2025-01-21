@@ -1,22 +1,25 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
 
 project(PassKeeper VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-set(nlohmann_json_DIR "C:\\Programs\\vcpkg\\packages\\nlohmann-json_x64-windows\\share\\nlohmann_json")
-set(OpenSSL_DIR "C:\\Programs\\vcpkg\\packages\\openssl_x64-windows\\share\\openssl")
-
-
-
 find_package(Qt6 REQUIRED COMPONENTS Quick)
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(OpenSSL REQUIRED)
 
+if(ANDROID)
+    set(nlohmann_json_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\vcpkg_installed_x64_android\\x64-android\\share\\nlohmann_json")
+    set(cryptopp_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\vcpkg_installed_x64_android\\x64-android\\share\\cryptopp")
+
+    # set(nlohmann_json_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\arm64-android\\share\\nlohmann_json")
+    # set(cryptopp_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\arm64-android\\share\\cryptopp")
+
+endif()
+
+find_package(nlohmann_json CONFIG REQUIRED)
+find_package(cryptopp CONFIG REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5)
-
 
 
 qt_add_executable(appPassKeeper
@@ -49,9 +52,9 @@ set_target_properties(appPassKeeper PROPERTIES
 target_link_libraries(appPassKeeper
     PRIVATE Qt6::Quick
 )
+
 target_link_libraries(appPassKeeper PRIVATE nlohmann_json::nlohmann_json)
-target_link_libraries(appPassKeeper PRIVATE OpenSSL::SSL)
-target_link_libraries(appPassKeeper PRIVATE OpenSSL::Crypto)
+target_link_libraries(appPassKeeper PRIVATE cryptopp::cryptopp)
 
 include(GNUInstallDirs)
 install(TARGETS appPassKeeper

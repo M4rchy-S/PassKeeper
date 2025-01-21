@@ -20,169 +20,231 @@ PassSafer::PassSafer(QObject *parent)
 }
 PassSafer::~PassSafer()
 {
-	if(this->isSavingToFile == true)
+    if(this->isSavingToFile == true && this->data.size() != 0)
 		this->writeDataToFile(this->FILENAME);
 }
 
 int PassSafer::readDataFromFile(const char* filename)
 {
-	try {
-		std::ifstream json_open_file(filename, std::ios::binary);
+    try {
+        std::ifstream json_open_file(filename, std::ios::binary);
 
-		if (json_open_file)
-		{
+        if (json_open_file)
+        {
 
-			char* data_ptr_str = new char[this->SIZE_DATA_STR];
-			memset(data_ptr_str, '\0', this->SIZE_DATA_STR);
+            char* data_ptr_str = new char[this->SIZE_DATA_STR];
+            memset(data_ptr_str, '\0', this->SIZE_DATA_STR);
 
-			json_open_file.read(reinterpret_cast<char*>(data_ptr_str), this->SIZE_DATA_STR);
-		
-			//		Decrypt
-			char* plaintext = new char[this->SIZE_DATA_STR];
-			memset(plaintext, '\0', this->SIZE_DATA_STR);
-			int plaintext_len;
+            json_open_file.read(reinterpret_cast<char*>(data_ptr_str), this->SIZE_DATA_STR);
 
-			size_t file_size = std::filesystem::file_size(filename);
 
-			if (this->DecryptAES((const unsigned char *)data_ptr_str, file_size, (unsigned char*)plaintext, plaintext_len) == false)
-			{
-				return -1;
-			}
 
-			plaintext[plaintext_len] = '\0';
+            size_t file_size = std::filesystem::file_size(filename);
 
-			std::string str_data = (char *)plaintext;
-			delete[] plaintext;
-			delete[] data_ptr_str;
 
-			if (str_data == "null")
+            std::string plain_text;
+            if (this->DecryptAES(data_ptr_str, file_size, plain_text) == false )
+            {
+                return -1;
+            }
+
+            delete[] data_ptr_str;
+
+            if (plain_text == "null")
                 return 1;
                 //throw  "Null json data";
 
-			try
-			{
-				this->data = nlohmann::json::parse(str_data);
-			}
-			catch (nlohmann::json::parse_error& ex)
-			{
-				throw "Invalid json data";
-			}
+            try
+            {
+                this->data = nlohmann::json::parse(plain_text);
+            }
+            catch (nlohmann::json::parse_error& ex)
+            {
+                throw "Invalid json data";
+            }
 
-			json_open_file.close();
-			return 1;
-		}
-		else
-		{
-			json_open_file.close();
-			this->data.clear();
-			return 0;
-		}
-	}
-	catch (const char *except)
-	{
-		this->data.clear();
-		
-		return -1;
-	}
+            json_open_file.close();
+            return 1;
+        }
+        else
+        {
+            json_open_file.close();
+            this->data.clear();
+            return 0;
+        }
+    }
+    catch (const char *except)
+    {
+        this->data.clear();
+
+        return -1;
+    }
 }
 
 int PassSafer::writeDataToFile(const char* filename)
 {
-	try {
-		std::ofstream json_open_file(filename, std::ios::binary | std::ios::trunc);
+    try {
+        std::ofstream json_open_file(filename, std::ios::binary | std::ios::trunc);
 
-		std::string json_text = this->data.dump();
+        std::string json_text = this->data.dump();
 
-		//	Encrypt
-		char* encrypted_str = new char[this->SIZE_DATA_STR];
-		memset(encrypted_str, '\0', this->SIZE_DATA_STR);
-		int encrypted_str_len;
+        std::string cipher_text;
+        if (this->EncryptAES(json_text.c_str(), json_text.length(), cipher_text) == false)
+        {
+            return -1;
+        }
 
-		if (this->EncryptAES((const unsigned char*)json_text.c_str(), json_text.length(), (unsigned char *)encrypted_str, encrypted_str_len) == false)
-		{
-			return -1;
-		}
+        json_open_file.write(cipher_text.c_str(), cipher_text.length());
 
-		//json_open_file.write(json_text.c_str(), json_text.length());
-		json_open_file.write((const char*)encrypted_str, encrypted_str_len);
+        json_open_file.close();
 
-		delete[] encrypted_str;
-		json_open_file.close();
-
-		return 1;
-	}
-	catch (const char* except)
-	{
-		return -1;
-	}
+        return 1;
+    }
+    catch (const char* except)
+    {
+        return -1;
+    }
 }
 
-bool PassSafer::EncryptAES(const unsigned char* plaintext, int plaintext_len, unsigned char* ciphertext, int& ciphertext_len)
+bool PassSafer::EncryptAES(const char* plaintext, size_t len, std::string& ciphertext)
 {
-	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-	if (!ctx)
-		return false;
+    //	Preparing key
 
-	if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, (const unsigned char*)this->key.c_str(), (const unsigned char*)this->iv) != 1)
-	{
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
+    std::string salt = "random_salt_value";
+    SecByteBlock key(AES::DEFAULT_KEYLENGTH);
 
-	int len;
+    try {
+        PKCS5_PBKDF2_HMAC<SHA256> pbkdf2;
+        pbkdf2.DeriveKey(
+            key, key.size(),
+            0,
+            reinterpret_cast<const byte*>(this->key.data()), this->key.size(),  // Пароль
+            reinterpret_cast<const byte*>(salt.data()), salt.size(),          // Соль
+            100000                        // Количество итераций
+            );
+    }
+    catch (const Exception& e)
+    {
+        //std::cout << e.what() << std::endl;
+        return false;
+    }
 
-	if (EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len) != 1)
-	{
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
+    //		Encryptor
+    try {
+        ECB_Mode<AES>::Encryption encryptor(key, key.size());
+        StringSource((byte *)plaintext, len, true, new StreamTransformationFilter(encryptor, new StringSink(ciphertext) ) );
+        return true;
+    }
+    catch (const Exception& e)
+    {
+        //std::cout << e.what() << std::endl;
+        return false;
+    }
 
-	ciphertext_len = len;
-
-	if (EVP_EncryptFinal_ex(ctx, ciphertext + len, &len) != 1)
-	{
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
-	ciphertext_len += len;
-
-	EVP_CIPHER_CTX_free(ctx);
-	return true;
 }
 
-bool PassSafer::DecryptAES(const unsigned char* ciphertext, int ciphertext_len, unsigned char* plaintext, int& plaintext_len)
+bool PassSafer::DecryptAES(const char* ciphertext, size_t len, std::string& plaintext)
 {
-	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
-	if (!ctx)
-		return false;
+    //	Preparing key
 
-	if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, (const unsigned char*)this->key.c_str(), (const unsigned char*)this->iv) != 1)
-	{
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
+    std::string salt = "random_salt_value";
+    SecByteBlock key(AES::DEFAULT_KEYLENGTH);
 
-	int len;
+    try {
+        PKCS5_PBKDF2_HMAC<SHA256> pbkdf2;
+        pbkdf2.DeriveKey(
+            key, key.size(),
+            0,
+            reinterpret_cast<const byte*>(this->key.data()), this->key.size(),  // Пароль
+            reinterpret_cast<const byte*>(salt.data()), salt.size(),          // Соль
+            100000                        // Количество итераций
+            );
+    }
+    catch (const Exception& e)
+    {
+        //std::cout << e.what() << std::endl;
+        return false;
+    }
 
-	if (EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len) != 1)
-	{
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
-
-	plaintext_len = len;
-	//plaintext[plaintext_len] = '\0';
-
-	if (EVP_DecryptFinal_ex(ctx, plaintext + len, &len) != 1)
-	{
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
-	plaintext_len += len;
-
-	EVP_CIPHER_CTX_free(ctx);
-	return true;
+    //		Decryptor
+    try {
+        ECB_Mode<AES>::Decryption decryptor(key, key.size());
+        StringSource((byte *)ciphertext, len, true, new StreamTransformationFilter(decryptor, new StringSink(plaintext)));
+        return true;
+    }
+    catch (const Exception& e)
+    {
+        //std::cout << e.what() << std::endl;
+        return false;
+    }
 }
+
+// bool PassSafer::EncryptAES(const unsigned char* plaintext, int plaintext_len, unsigned char* ciphertext, int& ciphertext_len)
+// {
+// 	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+// 	if (!ctx)
+// 		return false;
+
+// 	if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, (const unsigned char*)this->key.c_str(), (const unsigned char*)this->iv) != 1)
+// 	{
+// 		EVP_CIPHER_CTX_free(ctx);
+// 		return false;
+// 	}
+
+// 	int len;
+
+// 	if (EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len) != 1)
+// 	{
+// 		EVP_CIPHER_CTX_free(ctx);
+// 		return false;
+// 	}
+
+// 	ciphertext_len = len;
+
+// 	if (EVP_EncryptFinal_ex(ctx, ciphertext + len, &len) != 1)
+// 	{
+// 		EVP_CIPHER_CTX_free(ctx);
+// 		return false;
+// 	}
+// 	ciphertext_len += len;
+
+// 	EVP_CIPHER_CTX_free(ctx);
+// 	return true;
+// }
+
+// bool PassSafer::DecryptAES(const unsigned char* ciphertext, int ciphertext_len, unsigned char* plaintext, int& plaintext_len)
+// {
+// 	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+// 	if (!ctx)
+// 		return false;
+
+// 	if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, (const unsigned char*)this->key.c_str(), (const unsigned char*)this->iv) != 1)
+// 	{
+// 		EVP_CIPHER_CTX_free(ctx);
+// 		return false;
+// 	}
+
+// 	int len;
+
+// 	if (EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len) != 1)
+// 	{
+// 		EVP_CIPHER_CTX_free(ctx);
+// 		return false;
+// 	}
+
+// 	plaintext_len = len;
+// 	//plaintext[plaintext_len] = '\0';
+
+// 	if (EVP_DecryptFinal_ex(ctx, plaintext + len, &len) != 1)
+// 	{
+// 		EVP_CIPHER_CTX_free(ctx);
+// 		return false;
+// 	}
+// 	plaintext_len += len;
+
+// 	EVP_CIPHER_CTX_free(ctx);
+// 	return true;
+// }
 
 
 
@@ -217,6 +279,8 @@ int PassSafer::CreateCard(const QString &TitleQ, const QString &PasswordQ, const
 
 	this->data.push_back(card);
 
+    this->writeDataToFile(this->FILENAME);
+
 	return 1;
 }
 
@@ -248,6 +312,8 @@ int PassSafer::EditCard(const QString &indexQ, const QString &TitleQ, const QStr
 	this->data[index]["email"] = Email;
 	this->data[index]["description"] = Description;
 
+    this->writeDataToFile(this->FILENAME);
+
 	return 1;
 }
 
@@ -268,6 +334,8 @@ int PassSafer::DeleteCard(const QString &indexQ)
 	{
 		return -1;
 	}
+
+    this->writeDataToFile(this->FILENAME);
 
 	return 1;
 }
