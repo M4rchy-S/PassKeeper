@@ -66,7 +66,7 @@ Window {
             property bool editMode: false
 
             property color bg_color: "#2B2D42"
-            property color bg_accent: "#7E99A3"
+            property color bg_accent: "#7692FF"
             property color action_clr: "#A5BFCC"
             property color addit_color: "#DBDBDB"
             property color addit_second_color: "#7692FF"
@@ -128,7 +128,7 @@ Window {
 
                 id: error_input
                 color: "#B56060"
-                text: safer.isFileGood() ? "Wrong password" : "Your password should be stronger" ;
+                text: safer.isFileGood() ? qsTr( "Wrong password" ) : qsTr("Your password should be stronger") ;
                 font.pixelSize: 18
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -169,6 +169,7 @@ Window {
                         }
                         else{
                             if(safer.IsPasswordStrong(childTextField.text))
+                            {
                                 if( safer.CreateMasterPassword(childTextField.text) == true)
                                 {
                                     console.log("Created master password");
@@ -179,6 +180,7 @@ Window {
                                 {
                                     error_input.visible = true
                                 }
+                            }
                         }
 
                         load_indicator.visible = false
