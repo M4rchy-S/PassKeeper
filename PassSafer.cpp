@@ -20,8 +20,8 @@ PassSafer::PassSafer(QObject *parent)
 }
 PassSafer::~PassSafer()
 {
-    if(this->isSavingToFile == true && this->data.size() != 0)
-		this->writeDataToFile(this->FILENAME);
+  //   if(this->isSavingToFile == true && this->data.size() != 0)
+        // this->writeDataToFile(this->FILENAME);
 }
 
 int PassSafer::readDataFromFile(const char* filename)
@@ -279,7 +279,7 @@ int PassSafer::CreateCard(const QString &TitleQ, const QString &PasswordQ, const
 
 	this->data.push_back(card);
 
-    this->writeDataToFile(this->FILENAME);
+    //this->writeDataToFile(this->FILENAME);
 
 	return 1;
 }
@@ -312,7 +312,7 @@ int PassSafer::EditCard(const QString &indexQ, const QString &TitleQ, const QStr
 	this->data[index]["email"] = Email;
 	this->data[index]["description"] = Description;
 
-    this->writeDataToFile(this->FILENAME);
+   // this->writeDataToFile(this->FILENAME);
 
 	return 1;
 }
@@ -335,7 +335,7 @@ int PassSafer::DeleteCard(const QString &indexQ)
 		return -1;
 	}
 
-    this->writeDataToFile(this->FILENAME);
+    //this->writeDataToFile(this->FILENAME);
 
 	return 1;
 }
@@ -478,6 +478,17 @@ bool PassSafer::IsPasswordStrong(const QString &passwordQ)
     bool special_char = std::regex_search(password, std::regex("[!\"#$ % &'()*+,-./:;<=>?@[\\]^_`{|}~]+"));
 
     return int(upper_case + lower_case + number_case + special_char) >= 3;
+}
+
+bool PassSafer::SaveToFile()
+{
+    if(this->isSavingToFile == true)
+    {
+        if( this->writeDataToFile(this->FILENAME) == 1 )
+            return true;
+        else
+            return false;
+    }
 }
 
 bool PassSafer::isFileGood()

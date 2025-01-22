@@ -8,11 +8,11 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 if(ANDROID)
-    set(nlohmann_json_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\vcpkg_installed_x64_android\\x64-android\\share\\nlohmann_json")
-    set(cryptopp_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\vcpkg_installed_x64_android\\x64-android\\share\\cryptopp")
+    # set(nlohmann_json_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\vcpkg_installed_x64_android\\x64-android\\share\\nlohmann_json")
+    # set(cryptopp_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\vcpkg_installed_x64_android\\x64-android\\share\\cryptopp")
 
-    # set(nlohmann_json_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\arm64-android\\share\\nlohmann_json")
-    # set(cryptopp_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\arm64-android\\share\\cryptopp")
+    set(nlohmann_json_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\arm64-android\\share\\nlohmann_json")
+    set(cryptopp_DIR "C:\\Users\\dexag\\OneDrive\\Desktop\\android-libs\\arm64-android\\share\\cryptopp")
 
 endif()
 

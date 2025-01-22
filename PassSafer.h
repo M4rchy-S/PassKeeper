@@ -32,7 +32,7 @@ class PassSafer : public QObject
 private:
 	nlohmann::json data;
 
-	const char* FILENAME = "data.json";
+    const char* FILENAME = "data";
 	bool isFileExist = false;
 	bool isSavingToFile = false;
 
@@ -43,16 +43,16 @@ private:
 
 	const unsigned int MAX_CARDS_COUNT = 10;
 
-	const unsigned int TITLE_SIZE = 100;
+    const unsigned int TITLE_SIZE = 150;
 	const unsigned int URL_SIZE = 250;
 	const unsigned int EMAIL_SIZE = 150;
 	const unsigned int USERNAME_SIZE = 150;
 	const unsigned int PASSWORD_SIZE = 250;
-	const unsigned int DESCRIPTION_SIZE = 2048;
+    const unsigned int DESCRIPTION_SIZE = 450;
 
 	//		File func
 	int readDataFromFile(const char* filename);
-    int writeDataToFile(const char* filename="data.json");
+    int writeDataToFile(const char* filename="data");
 
 	//		AES Encryption functions
     // bool EncryptAES(const unsigned char *plaintext, int plaintext_lin, unsigned char *ciphertext, int &ciphertext_len);
@@ -89,6 +89,9 @@ public:
     Q_INVOKABLE static bool IsPasswordStrong(const char *password);
     Q_INVOKABLE static bool IsPasswordStrong(const std::string &password);
     Q_INVOKABLE static bool IsPasswordStrong(const QString &passwordQ);
+
+    //  Files functions
+    Q_INVOKABLE bool SaveToFile();
 
 
 };

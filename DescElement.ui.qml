@@ -39,6 +39,8 @@ ColumnLayout {
 
         selectionColor: Qt.lighter(theme.bg_color)
 
+        //maximumLength: 450
+
 
 
         background: Rectangle {

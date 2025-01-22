@@ -90,9 +90,19 @@ Window {
             visible: true
 
             anchors.top: parent.top
-            anchors.topMargin: 150
+            anchors.topMargin: 100
 
-            spacing: 40
+            spacing: 20
+
+            AnimatedImage{
+                id: enter_key_animation
+                source: "qrc:/anims/images/key-turning.gif"
+
+                Layout.alignment: Qt.AlignHCenter
+                sourceSize.width: 100
+                sourceSize.height: 100
+
+            }
 
             Text {
 
@@ -114,6 +124,20 @@ Window {
                 id: inputElementStart
             }
 
+            Text {
+
+                id: error_input
+                color: "#B56060"
+                text: safer.isFileGood() ? "Wrong password" : "Your password should be stronger" ;
+                font.pixelSize: 18
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.weight: Font.DemiBold
+                font.family: theme.fontFamily
+                Layout.alignment: Qt.AlignHCenter
+
+                visible: false
+            }
 
 
             Default_Button {
@@ -127,6 +151,8 @@ Window {
                 Connections {
                     target: enter_button
                     onClicked: {
+                        load_indicator.visible = true
+
                         let childTextField = inputElementStart.children[1];
                         if(safer.isFileGood())
                         {
@@ -135,6 +161,10 @@ Window {
                                 console.log("Entered master password");
                                 updateDataCards();
                                 main.state = "CardsPage"
+                            }
+                            else
+                            {
+                                error_input.visible = true
                             }
                         }
                         else{
@@ -145,13 +175,30 @@ Window {
                                     updateDataCards();
                                     main.state = "CardsPage"
                                 }
+                                else
+                                {
+                                    error_input.visible = true
+                                }
                         }
+
+                        load_indicator.visible = false
 
                         //main.state = "CardsPage"
                     }
 
                 }
             }
+
+            BusyIndicator{
+                id: load_indicator
+
+                Layout.alignment: Qt.AlignHCenter
+                palette.dark: theme.addit_second_color
+                visible: false
+            }
+
+
+
         }
 
         ColumnLayout {
@@ -283,19 +330,19 @@ Window {
                             }
 
                         }
-                        MenuItem{
-                            height: 75
-                            Text{
-                                // Layout.alignment: Qt.AlignHCenter
-                                anchors.centerIn: parent
-                                color: theme.bg_color
-                                text: qsTr("Light")
-                                font.pixelSize: theme.fontSizePara
+                        // MenuItem{
+                        //     height: 75
+                        //     Text{
+                        //         // Layout.alignment: Qt.AlignHCenter
+                        //         anchors.centerIn: parent
+                        //         color: theme.bg_color
+                        //         text: qsTr("Light")
+                        //         font.pixelSize: theme.fontSizePara
 
-                                font.weight: Font.DemiBold
-                                font.family: theme.fontFamily
-                            }
-                        }
+                        //         font.weight: Font.DemiBold
+                        //         font.family: theme.fontFamily
+                        //     }
+                        // }
                     }
                 }
                 Rectangle {
@@ -384,19 +431,19 @@ Window {
                             }
 
                         }
-                        MenuItem{
-                            height: 75
-                            Text{
-                                // Layout.alignment: Qt.AlignHCenter
-                                anchors.centerIn: parent
-                                color: theme.bg_color
-                                text: qsTr("Russian")
-                                font.pixelSize: theme.fontSizePara
+                        // MenuItem{
+                        //     height: 75
+                        //     Text{
+                        //         // Layout.alignment: Qt.AlignHCenter
+                        //         anchors.centerIn: parent
+                        //         color: theme.bg_color
+                        //         text: qsTr("Russian")
+                        //         font.pixelSize: theme.fontSizePara
 
-                                font.weight: Font.DemiBold
-                                font.family: theme.fontFamily
-                            }
-                        }
+                        //         font.weight: Font.DemiBold
+                        //         font.family: theme.fontFamily
+                        //     }
+                        // }
                     }
                 }
             }
@@ -430,6 +477,7 @@ Window {
                 spacing: 15
 
                 snapMode: PathView.SnapToItem
+                //boundsBehavior: Flickable.OvershootBounds
 
                 delegate: Rectangle {
 
@@ -540,6 +588,20 @@ Window {
                     property string label_helper: qsTr("Description")
                     id: desc_input
                 }
+                Text {
+
+                    id: error_input_form
+                    color: "#B56060"
+                    text: "Title and Password are mandatory fields" ;
+                    font.pixelSize: 18
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.weight: Font.DemiBold
+                    font.family: theme.fontFamily
+                    Layout.alignment: Qt.AlignHCenter
+
+                    visible: false
+                }
                 RowLayout {
                     anchors.horizontalCenter: parent.horizontalCenter
                     // width: parent.width
@@ -555,7 +617,9 @@ Window {
                             target: cancel_btn
                             onClicked: {
                                 updateDataCards();
+
                                 main.state = "CardsPage"
+                                error_input_form.visible = false
                             }
 
                         }
@@ -577,6 +641,11 @@ Window {
                                     {
                                         updateDataCards();
                                         main.state = "CardsPage"
+                                        error_input_form.visible = false
+                                    }
+                                    else
+                                    {
+                                        error_input_form.visible = true
                                     }
                                 }
                                 else
@@ -586,6 +655,11 @@ Window {
                                     {
                                         updateDataCards();
                                         main.state = "CardsPage"
+                                        error_input_form.visible = false
+                                    }
+                                    else
+                                    {
+                                        error_input_form.visible = true
                                     }
                                 }
 
@@ -686,6 +760,43 @@ Window {
                     theme.editMode = false;
                     cleanInputs() ;
                     main.state = "CreateCard";
+                }
+            }
+        }
+
+        Button {
+            id: save_file_btn
+
+            width: 50
+            height: 50
+
+            x: main.width - 175
+            y: main.height - 150
+
+            visible: false
+
+            contentItem: VectorImage{
+                // height: 50
+                // width: 50
+                fillMode: VectorImage.Stretch
+                source : "qrc:/icons/images/save.svg"
+            }
+
+            background: Rectangle {
+                id: save_file_btn_background
+                implicitWidth: custom_btn.width
+                implicitHeight: custom_btn.height
+                color: save_file_btn.down ? "#60B57C" : theme.addit_second_color
+                radius: 5
+            }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: save_file_btn_background.color =  "#60B57C";
+                onExited: save_file_btn_background.color = theme.addit_second_color;
+                onClicked: {
+                    console.log("File btn clicked");
+                    safer.SaveToFile();
                 }
             }
         }
@@ -868,7 +979,11 @@ Window {
                 PropertyChanges {
                     target: add_card_btn_plus
                     visible: true
+                }
 
+                PropertyChanges {
+                    target: save_file_btn
+                    visible: true
                 }
             },
             State {

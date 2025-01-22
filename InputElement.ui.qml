@@ -36,6 +36,8 @@ ColumnLayout {
         Layout.preferredWidth: 250
         Layout.preferredHeight: 40
 
+        maximumLength: 100
+
         selectionColor: Qt.lighter(theme.bg_color)
 
 

@@ -7,5 +7,9 @@
         <file>images/home.svg</file>
         <file>images/key.svg</file>
         <file>images/plus.svg</file>
+        <file>images/save.svg</file>
+    </qresource>
+    <qresource prefix="/anims">
+        <file>images/key-turning.gif</file>
     </qresource>
 </RCC>
