@@ -65,11 +65,11 @@ Window {
             property int index: 0
             property bool editMode: false
 
-            property color bg_color: "#373F47"
+            property color bg_color: "#2B2D42"
             property color bg_accent: "#7E99A3"
             property color action_clr: "#A5BFCC"
             property color addit_color: "#DBDBDB"
-            property color addit_second_color: "#76979C"
+            property color addit_second_color: "#7692FF"
             property color bg_color_sec: "#2A323A"
 
             property int fontSizePara: 16
