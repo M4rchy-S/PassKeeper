@@ -3,14 +3,19 @@ import QtQuick.Layouts
 import QtQuick.VectorImage
 
 import QtQuick.Controls.Basic
+
+import QtQml
 // import QtQuick.Controls 2.15
 // import QtQuick.Controls.Material 2.12
 
 import com.ics.keeper 1.0
 
 Window {
-    width: 480
-    height: 800
+
+
+
+    width: Qt.platform.os === "android" ? 480 : 1280
+    height: Qt.platform.os === "android" ? 800 : 920
     visible: true
 
     title: qsTr("Pass Keeper")
@@ -25,7 +30,12 @@ Window {
         for(var i = 0; i < safer.getCardCount(); i++)
         {
             var card = safer.GetCardInfo(i);
-            cards_list_model.append({title: card[1], index: card[0]})
+            var title_str = card[1]
+
+            if(title_str.length > 15)
+                title_str = card[1].substr(0, 15) + "..."
+
+            cards_list_model.append({title: title_str, index: card[0]})
         }
     }
 
@@ -135,6 +145,8 @@ Window {
                 font.weight: Font.DemiBold
                 font.family: theme.fontFamily
                 Layout.alignment: Qt.AlignHCenter
+                Layout.preferredWidth: 250
+                Layout.preferredHeight: 40
 
                 visible: false
             }
@@ -164,23 +176,26 @@ Window {
                             }
                             else
                             {
+                                console.log("Error input visible set")
                                 error_input.visible = true
                             }
                         }
                         else{
-                            if(safer.IsPasswordStrong(childTextField.text))
+                            if(safer.IsPasswordStrong(childTextField.text) == true)
                             {
                                 if( safer.CreateMasterPassword(childTextField.text) == true)
                                 {
                                     console.log("Created master password");
                                     updateDataCards();
                                     main.state = "CardsPage"
-                                }
-                                else
-                                {
-                                    error_input.visible = true
-                                }
+                                } 
                             }
+                            else
+                            {
+                                console.log("Error input visible set")
+                                error_input.visible = true
+                            }
+
                         }
 
                         load_indicator.visible = false
